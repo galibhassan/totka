@@ -3,6 +3,7 @@
     "name": "Totka",
     "slug": "totka",
     "version": "1.0.0",
+    "sdkVersion": "54.0.0",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -14,9 +15,6 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       [
