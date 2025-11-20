@@ -32,9 +32,13 @@ export default function App() {
   useEffect(() => {
     // Request notification permissions
     (async () => {
-      const { status } = await Notifications.requestPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Notification permissions not granted');
+      try {
+        const { status } = await Notifications.requestPermissionsAsync();
+        if (status !== 'granted') {
+          console.log('Notification permissions not granted');
+        }
+      } catch (error) {
+        console.log('Error requesting notification permissions:', error);
       }
     })();
 

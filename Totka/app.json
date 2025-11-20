@@ -3,18 +3,22 @@
     "name": "Totka",
     "slug": "totka",
     "version": "1.0.0",
+    "scheme": "totka",
     "sdkVersion": "54.0.0",
+    "orientation": "portrait",
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTabletMode": true
+      "supportsTabletMode": true,
+      "bundleIdentifier": "com.totka.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.totka.app"
     },
     "plugins": [
       [
