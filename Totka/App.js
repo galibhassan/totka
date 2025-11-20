@@ -8,10 +8,11 @@ import { Ionicons } from '@expo/vector-icons';
 import RemindersScreen from './src/screens/RemindersScreen';
 import HistoryScreen from './src/screens/HistoryScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import { setupNotificationChannels, rescheduleNotificationForNextDay } from './src/utils/notifications';
 
 const Tab = createBottomTabNavigator();
 
-// Configure notifications
+// Configure notifications with sound enabled
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -30,10 +31,19 @@ TaskManager.defineTask(BACKGROUND_NOTIFICATION_TASK, ({ data, error, executionIn
 
 export default function App() {
   useEffect(() => {
+    // Setup notification channels for Android
+    setupNotificationChannels();
+
     // Request notification permissions
     (async () => {
       try {
-        const { status } = await Notifications.requestPermissionsAsync();
+        const { status } = await Notifications.requestPermissionsAsync({
+          ios: {
+            allowAlert: true,
+            allowSound: true,
+            allowBadge: true,
+          },
+        });
         if (status !== 'granted') {
           console.log('Notification permissions not granted');
         }
@@ -44,12 +54,24 @@ export default function App() {
 
     // Listen for notifications when app is in foreground
     const subscription = Notifications.addNotificationReceivedListener(notification => {
-      console.log('Notification received:', notification);
+      console.log('Notification received in foreground:', notification);
+      
+      // Reschedule for next day after notification is received
+      const { medicineId, medicineName, time } = notification.request.content.data;
+      if (medicineId && medicineName && time) {
+        rescheduleNotificationForNextDay(medicineId, medicineName, time);
+      }
     });
 
     // Listen for notification response (when user taps notification)
     const responseSubscription = Notifications.addNotificationResponseReceivedListener(response => {
       console.log('Notification response:', response);
+      
+      // Reschedule for next day after user taps notification
+      const { medicineId, medicineName, time } = response.notification.request.content.data;
+      if (medicineId && medicineName && time) {
+        rescheduleNotificationForNextDay(medicineId, medicineName, time);
+      }
     });
 
     return () => {

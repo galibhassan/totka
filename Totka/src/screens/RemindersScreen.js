@@ -14,7 +14,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { getTodaysMedicines, markMedicineTaken, deleteMedicine } from '../utils/storage';
-import { scheduleNotification } from '../utils/notifications';
+import { scheduleNotification, cancelMedicineNotifications } from '../utils/notifications';
 
 const RemindersScreen = () => {
   const [medicines, setMedicines] = useState([]);
@@ -83,6 +83,8 @@ const RemindersScreen = () => {
         {
           text: 'Delete',
           onPress: async () => {
+            // Cancel all scheduled notifications for this medicine
+            await cancelMedicineNotifications(medicineId);
             await deleteMedicine(medicineId);
             loadMedicines();
           },
